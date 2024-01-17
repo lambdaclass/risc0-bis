@@ -139,18 +139,40 @@ pub(crate) async fn snark_status(
     match receipt {
         Some(bytes) => {
             let receipt: Receipt = bincode::deserialize(&bytes)?;
-            Ok(Json(SnarkStatusRes {
-                status: "SUCCEEDED".to_string(),
-                output: Some(SnarkReceipt {
+            #[cfg(not(feature = "prove"))]
+            let output = Some(SnarkReceipt {
+                snark: Groth16Seal {
+                    a: vec![],
+                    b: vec![],
+                    c: vec![],
+                    public: vec![],
+                },
+                post_state_digest: vec![],
+                journal: receipt.journal.bytes,
+            });
+
+            #[cfg(feature = "prove")]
+            let output = {
+                use risc0_zkvm::sha::Digestible;
+                let groth16_receipt = receipt.inner.groth16().unwrap();
+                let seal = risc0_zkvm::Groth16Seal::from_vec(&groth16_receipt.seal).unwrap();
+                let post_state_digest = groth16_receipt.claim.post.digest().as_bytes().to_vec();
+                let output = Some(SnarkReceipt {
                     snark: Groth16Seal {
-                        a: vec![],
-                        b: vec![],
-                        c: vec![],
+                        a: seal.a,
+                        b: seal.b,
+                        c: seal.c,
                         public: vec![],
                     },
-                    post_state_digest: vec![],
+                    post_state_digest,
                     journal: receipt.journal.bytes,
-                }),
+                });
+                output
+            };
+
+            Ok(Json(SnarkStatusRes {
+                status: "SUCCEEDED".to_string(),
+                output,
                 error_msg: None,
             }))
         }

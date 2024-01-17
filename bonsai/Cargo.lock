@@ -904,9 +904,11 @@ dependencies = [
  "bincode",
  "bonsai-sdk",
  "hex",
+ "risc0-seal-to-json",
  "risc0-zkvm",
  "risc0-zkvm-methods",
  "serde_json",
+ "tempfile",
  "thiserror",
  "tokio",
  "tower-http",
@@ -4461,6 +4463,18 @@ version = "0.21.0-alpha.1"
 dependencies = [
  "bytemuck",
  "rand_core 0.6.4",
+]
+
+[[package]]
+name = "risc0-seal-to-json"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "bytemuck",
+ "num-bigint 0.4.4",
+ "num-traits",
+ "risc0-core",
+ "risc0-zkp",
 ]
 
 [[package]]
