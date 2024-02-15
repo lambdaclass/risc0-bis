@@ -63,14 +63,18 @@ pub struct GuestListEntry<'a> {
     pub path: &'a str,
 }
 
+/// Represents a RISC Zero method
 #[derive(Debug)]
-struct Risc0Method {
-    name: String,
-    elf_path: PathBuf,
+pub struct Risc0Method {
+    /// Name of the method
+    pub name: String,
+    /// Path of the method's binary
+    pub elf_path: PathBuf,
 }
 
 impl Risc0Method {
-    fn make_image_id(&self) -> Digest {
+    /// Returns the image ID as a digest
+    pub fn make_image_id(&self) -> Digest {
         if !self.elf_path.exists() {
             eprintln!(
                 "RISC-V method was not found at: {:?}",
@@ -389,10 +393,6 @@ fn build_guest_package<P>(
 ) where
     P: AsRef<Path>,
 {
-    if !get_env_var("RISC0_SKIP_BUILD").is_empty() {
-        return;
-    }
-
     fs::create_dir_all(target_dir.as_ref()).unwrap();
 
     let mut cmd = if let Some(lib) = runtime_lib {
@@ -519,7 +519,12 @@ fn get_guest_dir() -> PathBuf {
 /// Embeds methods built for RISC-V for use by host-side dependencies.
 /// Specify custom options for a guest package by defining its [GuestOptions].
 /// See [embed_methods].
-pub fn embed_methods_with_options(mut guest_pkg_to_options: HashMap<&str, GuestOptions>) {
+pub fn embed_methods_with_options(
+    mut guest_pkg_to_options: HashMap<&str, GuestOptions>,
+) -> Vec<Risc0Method> {
+    if !get_env_var("RISC0_SKIP_BUILD").is_empty() {
+        return Vec::new();
+    }
     let out_dir_env = env::var_os("OUT_DIR").unwrap();
     let out_dir = Path::new(&out_dir_env); // $ROOT/target/$profile/build/$crate/out
     let guest_dir = get_guest_dir();
@@ -538,6 +543,7 @@ pub fn embed_methods_with_options(mut guest_pkg_to_options: HashMap<&str, GuestO
 
     detect_toolchain(RUSTUP_TOOLCHAIN_NAME);
 
+    let mut out_methods = vec![];
     for guest_pkg in guest_packages {
         println!("Building guest package {}.{}", pkg.name, guest_pkg.name);
 
@@ -568,6 +574,7 @@ pub fn embed_methods_with_options(mut guest_pkg_to_options: HashMap<&str, GuestO
 
             #[cfg(feature = "guest-list")]
             guest_list_entries.push(method.guest_list_entry());
+            out_methods.push(method);
         }
     }
     #[cfg(feature = "guest-list")]
@@ -588,6 +595,7 @@ pub fn embed_methods_with_options(mut guest_pkg_to_options: HashMap<&str, GuestO
     // Since we generate methods.rs each time we run, it will always
     // be changed.
     println!("cargo:rerun-if-changed={}", methods_path.display());
+    out_methods
 }
 
 /// Embeds methods built for RISC-V for use by host-side dependencies.
@@ -608,6 +616,6 @@ pub fn embed_methods_with_options(mut guest_pkg_to_options: HashMap<&str, GuestO
 /// to uppercase.  For instance, if you have a method named
 /// "my_method", the image ID and elf contents will be defined as
 /// "MY_METHOD_ID" and "MY_METHOD_ELF" respectively.
-pub fn embed_methods() {
+pub fn embed_methods() -> Vec<Risc0Method> {
     embed_methods_with_options(HashMap::new())
 }
