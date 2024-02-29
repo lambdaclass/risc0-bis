@@ -92,7 +92,35 @@ jobs:
         
       - name: Compare Benchmarks with Threshold
         run: |
-          echo "Test"
+          THRESHOLD_PERCENTAGE=8
+
+          # Checks for criterion comparison output for values that exceed threshold
+          while read line; do
+            
+            if [[ "$line" == *"+"* ]] && [[ "$line" == *"%"* ]]; then
+              
+              # Stores performance change as variable
+              BM_PERF_CHANGE=$(sed 's|.*+\(.*\)%.*|\1|' <<< "$line")
+              
+              # Compares performance change against threshold, writes line to file if exceeded
+              if [[ "$BM_PERF_CHANGE" -gt "$THRESHOLD_PERCENTAGE" ]]; then
+                  echo -e "\n$line\n" >> thresholds_exceeded.txt
+              fi
+          
+            fi
+          
+          done <test.md
+          
+          # Displays exceeded thresholds and fails if any were recorded
+          if [ -e thresholds_exceeded.txt ];
+          then
+              echo -e "\nSome Benchmarks exceeded threshold:"
+              cat thresholds_exceeded.txt
+              exit 1
+          else
+              echo "No Benchmarks exceeded threshold... Exiting..."
+              exit 0
+          fi
       
 
       # Note: we just push the comment data into artifacts, here
