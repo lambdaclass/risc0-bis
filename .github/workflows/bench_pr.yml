@@ -87,20 +87,20 @@ jobs:
       #  run: sed h ${{ runner.temp }}/pr-output/*-output.md > ${{ runner.temp }}/pr-output/merged.md
       #  id: download
 
-      - name: Display Benchmark Results in CI
+      - name: Display Benchmark Results
         run: cat ${{ runner.temp }}/pr-output/${{ matrix.os }}-${{ matrix.feature }}-output.md
         
       - name: Compare Benchmarks with Threshold
         run: |
-          THRESHOLD_PERCENTAGE=8
+          THRESHOLD_PERCENTAGE=1
 
           # Checks for criterion comparison output for values that exceed threshold
           while read line; do
             
-            if [[ "$line" == *"+"* ]] && [[ "$line" == *"%"* ]]; then
+            if [[ "$line" == *"-"* ]] && [[ "$line" == *"%"* ]]; then
               
               # Stores performance change as variable
-              BM_PERF_CHANGE=$(sed 's|.*+\(.*\)%.*|\1|' <<< "$line")
+              BM_PERF_CHANGE=$(sed 's|.*-\(.*\)%.*|\1|' <<< "$line")
               
               # Compares performance change against threshold, writes line to file if exceeded
               if [[ "$BM_PERF_CHANGE" -gt "$THRESHOLD_PERCENTAGE" ]]; then
