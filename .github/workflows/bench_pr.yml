@@ -109,7 +109,7 @@ jobs:
           
             fi
           
-          done <test.md
+          done <${{ runner.temp }}/pr-output/${{ matrix.os }}-${{ matrix.feature }}-output.md
           
           # Displays exceeded thresholds and fails if any were recorded
           if [ -e thresholds_exceeded.txt ];
