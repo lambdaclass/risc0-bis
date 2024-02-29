@@ -70,6 +70,31 @@ jobs:
           path: ${{ runner.temp }}/pr-output/
           if-no-files-found: error
 
+      - uses: actions/download-artifact@v3
+        # Using v4 might cause complications if we move to GitHub Enterprise Server (GHES)
+        with:
+          path: ${{ runner.temp }}/pr-output/
+          merge-multiple: true
+          #github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      #- name: unzip benchmark markdown files
+      #  run: |
+      #    mkdir -p ${{ runner.temp }}/pr-output/
+      #    unzip -o ${{ runner.temp }}/md-output.zip -d ${{ runner.temp }}/pr-output/
+
+      - name: Merge output files
+        shell: bash
+        run: sed h ${{ runner.temp }}/pr-output/*-output.md > ${{ runner.temp }}/pr-output/merged.md
+        id: download
+
+      - name: Display Benchmark Results in CI
+        run: cat merged.md
+        
+      - name: Compare Benchmarks with Threshold
+        run: |
+          echo "Test"
+      
+
       # Note: we just push the comment data into artifacts, here
       # the bench_pr_comment.yml picks up after this workflow to make the comment
       # needed because: https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
