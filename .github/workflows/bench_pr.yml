@@ -92,7 +92,7 @@ jobs:
         
       - name: Compare Benchmarks with Threshold
         run: |
-          THRESHOLD_PERCENTAGE=1
+          THRESHOLD_PERCENTAGE=$(1 | bc)
 
           # Checks for criterion comparison output for values that exceed threshold
           while read line; do
@@ -100,10 +100,11 @@ jobs:
             if [[ "$line" == *"-"* ]] && [[ "$line" == *"."* ]]; then
               
               # Stores performance change as variable
-              BM_PERF_CHANGE=$(sed 's|.*-\(.*\)%.*|\1|' <<< "$line")
+              BM_PERF_CHANGE=$(sed 's|.*-\(.*\)%.*|\1|' <<< "$line" | bc)
               
               # Compares performance change on each line against threshold, writes line to file if exceeded
-              if [[ "$BM_PERF_CHANGE | bc" -gt "$THRESHOLD_PERCENTAGE | bc" ]]; then
+              # Variables piped through `bc` to process floating-point number comparisons
+              if [[ "$BM_PERF_CHANGE" -gt "$THRESHOLD_PERCENTAGE" ]]; then
                   echo -e "\n$line\n" >> thresholds_exceeded.txt
               fi
           
