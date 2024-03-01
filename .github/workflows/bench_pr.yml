@@ -91,7 +91,6 @@ jobs:
         run: cat ${{ runner.temp }}/pr-output/${{ matrix.os }}-${{ matrix.feature }}-output.md
         
       - name: Compare Benchmarks with Threshold
-        shell: zsh
         run: |
           THRESHOLD_PERCENTAGE=1
 
@@ -103,8 +102,8 @@ jobs:
               # Stores performance change as variable
               BM_PERF_CHANGE=$(sed 's|.*-\(.*\)%.*|\1|' <<< "$line")
               
-              # Compares performance change against threshold, writes line to file if exceeded
-              if [[ "$BM_PERF_CHANGE" -gt "$THRESHOLD_PERCENTAGE" ]]; then
+              # Compares performance change on each line against threshold, writes line to file if exceeded
+              if [[ "$BM_PERF_CHANGE | bc" -gt "$THRESHOLD_PERCENTAGE | bc" ]]; then
                   echo -e "\n$line\n" >> thresholds_exceeded.txt
               fi
           
