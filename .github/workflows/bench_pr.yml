@@ -91,6 +91,7 @@ jobs:
         run: cat ${{ runner.temp }}/pr-output/${{ matrix.os }}-${{ matrix.feature }}-output.md
         
       - name: Compare Benchmarks with Threshold
+        shell: zsh
         run: |
           THRESHOLD_PERCENTAGE=1
 
