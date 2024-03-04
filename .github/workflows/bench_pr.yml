@@ -92,7 +92,7 @@ jobs:
         
       - name: Compare Benchmarks with Threshold
         run: |
-          THRESHOLD_PERCENTAGE=$(1 | bc)
+          THRESHOLD_PERCENTAGE=1.00
 
           # Checks for criterion comparison output for values that exceed threshold
           while read line; do
