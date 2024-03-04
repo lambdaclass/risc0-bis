@@ -100,7 +100,7 @@ jobs:
             if [[ "$line" == *"-"* ]] && [[ "$line" == *"."* ]]; then
               
               # Stores performance change as variable
-              BM_PERF_CHANGE=$(sed 's|.*-\(.*\)%.*|\1|' <<< "$line" | bc)
+              BM_PERF_CHANGE=$(sed 's|.*-\(.*\)%.*|\1|' <<< "$line")
               
               # Compares performance change on each line against threshold, writes line to file if exceeded
               # Variables piped through `bc` to process floating-point number comparisons
