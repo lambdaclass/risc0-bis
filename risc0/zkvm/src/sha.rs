@@ -54,7 +54,7 @@ pub use risc0_zkp::core::{
 // Pick the appropriate implementation of SHA-256 depending on whether we are
 // in the zkVM guest. Users can simply `use risc0_zkvm::sha::Impl`.
 cfg_if::cfg_if! {
-    if #[cfg(target_os = "zkvm")] {
+    if #[cfg(target_os = "r0-zkvm")] {
         pub use crate::guest::sha::Impl;
     } else {
         pub use risc0_zkp::core::hash::sha::cpu::Impl;

@@ -14,13 +14,13 @@
 
 //! Simple SHA-256 wrappers.
 
-#[cfg(not(target_os = "zkvm"))]
+#[cfg(not(target_os = "r0-zkvm"))]
 pub mod cpu;
-#[cfg(not(target_os = "zkvm"))]
+#[cfg(not(target_os = "r0-zkvm"))]
 mod rng;
 pub mod rust_crypto;
 
-#[cfg(not(target_os = "zkvm"))]
+#[cfg(not(target_os = "r0-zkvm"))]
 use alloc::boxed::Box;
 use alloc::{format, vec::Vec};
 use core::{
@@ -302,10 +302,10 @@ impl Debug for Block {
 }
 
 /// Wrap a Sha256 trait as a HashFn trait
-#[cfg(not(target_os = "zkvm"))]
+#[cfg(not(target_os = "r0-zkvm"))]
 struct Sha256HashFn;
 
-#[cfg(not(target_os = "zkvm"))]
+#[cfg(not(target_os = "r0-zkvm"))]
 impl<F: Field> super::HashFn<F> for Sha256HashFn {
     fn hash_pair(&self, a: &Digest, b: &Digest) -> Box<Digest> {
         cpu::Impl::hash_pair(a, b)
@@ -320,10 +320,10 @@ impl<F: Field> super::HashFn<F> for Sha256HashFn {
     }
 }
 
-#[cfg(not(target_os = "zkvm"))]
+#[cfg(not(target_os = "r0-zkvm"))]
 struct Sha256RngFactory;
 
-#[cfg(not(target_os = "zkvm"))]
+#[cfg(not(target_os = "r0-zkvm"))]
 impl<F: Field> super::RngFactory<F> for Sha256RngFactory {
     fn new_rng(&self) -> Box<dyn super::Rng<F>> {
         Box::new(rng::ShaRng::new())
@@ -335,7 +335,7 @@ pub struct Sha256HashSuite<F: Field> {
     phantom: PhantomData<F>,
 }
 
-#[cfg(not(target_os = "zkvm"))]
+#[cfg(not(target_os = "r0-zkvm"))]
 impl<F: Field> Sha256HashSuite<F> {
     /// Construct a Sha256HashSuite
     pub fn new_suite() -> super::HashSuite<F> {

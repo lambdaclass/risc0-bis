@@ -18,7 +18,7 @@ use merkle_light::{
     hash::{Algorithm, Hashable},
     merkle, proof,
 };
-#[cfg(target_os = "zkvm")]
+#[cfg(target_os = "r0-zkvm")]
 use risc0_zkvm::guest;
 use risc0_zkvm::{
     declare_syscall,
@@ -70,7 +70,7 @@ where
     }
 }
 
-#[cfg(not(target_os = "zkvm"))]
+#[cfg(not(target_os = "r0-zkvm"))]
 impl<Element> MerkleTree<Element>
 where
     Element: Hashable<ShaHasher> + Serialize,
@@ -250,7 +250,7 @@ impl Algorithm<Node> for ShaHasher {
 /// guest will verify a Merkle proof against the root given when the
 /// VectorOracle is created to ensure all accessed values are consistent
 /// with a vector with that root.
-#[cfg(target_os = "zkvm")]
+#[cfg(target_os = "r0-zkvm")]
 pub struct VectorOracle<Element>
 where
     Element: Hashable<ShaHasher> + Deserialize<'static>,
@@ -259,7 +259,7 @@ where
     phantom_elem: PhantomData<Element>,
 }
 
-#[cfg(target_os = "zkvm")]
+#[cfg(target_os = "r0-zkvm")]
 impl<Element> VectorOracle<Element>
 where
     Element: Hashable<ShaHasher> + Deserialize<'static>,

@@ -19,11 +19,11 @@
 pub mod memory;
 #[macro_use]
 pub mod syscall;
-#[cfg(all(feature = "export-getrandom", target_os = "zkvm"))]
+#[cfg(all(feature = "export-getrandom", target_os = "r0-zkvm"))]
 mod getrandom;
-#[cfg(all(feature = "export-libm", target_os = "zkvm"))]
+#[cfg(all(feature = "export-libm", target_os = "r0-zkvm"))]
 mod libm_extern;
-#[cfg(all(feature = "rust-runtime", target_os = "zkvm"))]
+#[cfg(all(feature = "rust-runtime", target_os = "r0-zkvm"))]
 pub mod rust_rt;
 
 /// Size of a zkVM machine word in bytes.

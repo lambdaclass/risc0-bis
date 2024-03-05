@@ -16,7 +16,7 @@ tracing = { version = "0.1", default-features = false, features = [
   "attributes",
 ] }
 
-[target.'cfg(not(target_os = "zkvm"))'.dependencies]
+[target.'cfg(not(target_os = "r0-zkvm"))'.dependencies]
 bytemuck = "1.12"
 cust = { version = "0.3", optional = true }
 metal = { version = "0.25", optional = true }

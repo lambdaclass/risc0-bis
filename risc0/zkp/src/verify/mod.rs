@@ -237,7 +237,7 @@ where
 
         // Get merkle root for the code merkle tree.
         // The code merkle tree contains the control instructions for the zkVM.
-        #[cfg(not(target_os = "zkvm"))]
+        #[cfg(not(target_os = "r0-zkvm"))]
         tracing::debug!("code_merkle");
         let code_merkle = MerkleTreeVerifier::new(&mut iop, hashfn, domain, code_size, QUERIES);
         // tracing::debug!("codeRoot = {}", code_merkle.root());
@@ -247,13 +247,13 @@ where
         // The data merkle tree contains the execution trace of the program being run,
         // including memory accesses as well as the permutation of those memory
         // accesses sorted by location used by PLONK.
-        #[cfg(not(target_os = "zkvm"))]
+        #[cfg(not(target_os = "r0-zkvm"))]
         tracing::debug!("data_merkle");
         let data_merkle = MerkleTreeVerifier::new(&mut iop, hashfn, domain, data_size, QUERIES);
         // tracing::debug!("dataRoot = {}", data_merkle.root());
 
         // Prep accumulation
-        #[cfg(not(target_os = "zkvm"))]
+        #[cfg(not(target_os = "r0-zkvm"))]
         tracing::debug!("accumulate");
         // Fill in accum mix
         self.mix = (0..C::MIX_SIZE).map(|_| iop.random_elem()).collect();
@@ -267,7 +267,7 @@ where
         // quicker verification. The second permutation check uses bytes-based
         // values (see PLOOKUP paper for details). This permutation is used to
         // implement a look-up table.
-        #[cfg(not(target_os = "zkvm"))]
+        #[cfg(not(target_os = "r0-zkvm"))]
         tracing::debug!("accum_merkle");
         let accum_merkle = MerkleTreeVerifier::new(&mut iop, hashfn, domain, accum_size, QUERIES);
         // tracing::debug!("accumRoot = {}", accum_merkle.root());
@@ -276,7 +276,7 @@ where
         // See DEEP-ALI protocol from DEEP-FRI paper for details on constraint mixing.
         let poly_mix = iop.random_ext_elem();
 
-        #[cfg(not(target_os = "zkvm"))]
+        #[cfg(not(target_os = "r0-zkvm"))]
         tracing::debug!("check_merkle");
         let check_merkle =
             MerkleTreeVerifier::new(&mut iop, hashfn, domain, Self::CHECK_SIZE, QUERIES);
@@ -309,7 +309,7 @@ where
 
         // Compute the core constraint polynomial.
         // I.e. the set of all constraints mixed by poly_mix
-        #[cfg(not(target_os = "zkvm"))]
+        #[cfg(not(target_os = "r0-zkvm"))]
         tracing::debug!("> compute_polynomial");
         // let result = self.compute_polynomial(&eval_u, poly_mix);
         let result = self
@@ -317,7 +317,7 @@ where
             .poly_ext(&poly_mix, &eval_u, &[self.out.unwrap(), &self.mix])
             .tot;
 
-        #[cfg(not(target_os = "zkvm"))]
+        #[cfg(not(target_os = "r0-zkvm"))]
         tracing::debug!("< compute_polynomial");
         // tracing::debug!("Result = {result:?}");
 

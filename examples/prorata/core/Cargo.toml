@@ -14,7 +14,7 @@ serde = { version = "1.0", features = ["derive"] }
 sha2 = "0.10"
 
 # Host-only dependencies
-[target.'cfg(not(target_os = "zkvm"))'.dependencies]
+[target.'cfg(not(target_os = "r0-zkvm"))'.dependencies]
 hex = "0.4"
 
 [dev-dependencies]

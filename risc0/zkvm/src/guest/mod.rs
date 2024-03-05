@@ -82,20 +82,20 @@
 pub mod env;
 pub mod sha;
 
-#[cfg(target_os = "zkvm")]
+#[cfg(target_os = "r0-zkvm")]
 use core::arch::asm;
 
 use risc0_zkvm_platform::syscall::sys_panic;
 
 pub use crate::entry;
 
-#[cfg(target_os = "zkvm")]
+#[cfg(target_os = "r0-zkvm")]
 core::arch::global_asm!(include_str!("memset.s"));
-#[cfg(target_os = "zkvm")]
+#[cfg(target_os = "r0-zkvm")]
 core::arch::global_asm!(include_str!("memcpy.s"));
 
 fn _fault() -> ! {
-    #[cfg(target_os = "zkvm")]
+    #[cfg(target_os = "r0-zkvm")]
     unsafe {
         asm!("sw x0, 1(x0)")
     };
@@ -147,7 +147,7 @@ macro_rules! entry {
     };
 }
 
-#[cfg(target_os = "zkvm")]
+#[cfg(target_os = "r0-zkvm")]
 #[no_mangle]
 unsafe extern "C" fn __start() -> ! {
     env::init();
@@ -163,13 +163,13 @@ unsafe extern "C" fn __start() -> ! {
     unreachable!();
 }
 
-#[cfg(target_os = "zkvm")]
+#[cfg(target_os = "r0-zkvm")]
 static STACK_TOP: u32 = risc0_zkvm_platform::memory::STACK_TOP;
 
 // Entry point; sets up global pointer and stack pointer and passes
 // to zkvm_start.  TODO: when asm_const is stablized, use that here
 // instead of defining a symbol and dereferencing it.
-#[cfg(target_os = "zkvm")]
+#[cfg(target_os = "r0-zkvm")]
 core::arch::global_asm!(
     r#"
 .section .text._start;
@@ -192,18 +192,18 @@ _start:
 #[allow(unused_variables)]
 pub fn memory_barrier<T>(ptr: *const T) {
     // SAFETY: This passes a pointer in, but does nothing with it.
-    #[cfg(target_os = "zkvm")]
+    #[cfg(target_os = "r0-zkvm")]
     unsafe {
         asm!("/* {0} */", in(reg) (ptr))
     }
-    #[cfg(not(target_os = "zkvm"))]
+    #[cfg(not(target_os = "r0-zkvm"))]
     core::sync::atomic::fence(core::sync::atomic::Ordering::SeqCst)
 }
 
 // When std is not linked, register a panic handler here so the user does not
 // have to. If std is linked, it will define the panic handler instead. This
 // panic handler must not be included.
-#[cfg(all(target_os = "zkvm", not(feature = "std")))]
+#[cfg(all(target_os = "r0-zkvm", not(feature = "std")))]
 #[panic_handler]
 fn panic_impl(panic_info: &core::panic::PanicInfo) -> ! {
     risc0_zkvm_platform::rust_rt::panic_fault(panic_info);

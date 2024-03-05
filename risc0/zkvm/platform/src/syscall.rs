@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#[cfg(target_os = "zkvm")]
+#[cfg(target_os = "r0-zkvm")]
 use core::arch::asm;
 use core::{cmp::min, ptr::null_mut};
 
@@ -195,7 +195,7 @@ macro_rules! impl_syscall {
                                    )?
                                  )?
         ) -> Return {
-            #[cfg(target_os = "zkvm")] {
+            #[cfg(target_os = "r0-zkvm")] {
                 let a0: u32;
                 let a1: u32;
                 ::core::arch::asm!(
@@ -216,7 +216,7 @@ macro_rules! impl_syscall {
                         )?);
                 Return(a0, a1)
             }
-            #[cfg(not(target_os = "zkvm"))]
+            #[cfg(not(target_os = "r0-zkvm"))]
             unimplemented!()
         }
     }
@@ -230,7 +230,7 @@ impl_syscall!(syscall_4, a3, a4, a5, a6);
 impl_syscall!(syscall_5, a3, a4, a5, a6, a7);
 
 fn ecall_1(t0: u32, a0: u32, a1: u32) {
-    #[cfg(target_os = "zkvm")]
+    #[cfg(target_os = "r0-zkvm")]
     unsafe {
         asm!(
             "ecall",
@@ -239,7 +239,7 @@ fn ecall_1(t0: u32, a0: u32, a1: u32) {
             in("a1") a1,
         )
     };
-    #[cfg(not(target_os = "zkvm"))]
+    #[cfg(not(target_os = "r0-zkvm"))]
     {
         core::hint::black_box((t0, a0, a1));
         unimplemented!()
@@ -247,7 +247,7 @@ fn ecall_1(t0: u32, a0: u32, a1: u32) {
 }
 
 fn ecall_4(t0: u32, a0: u32, a1: u32, a2: u32, a3: u32, a4: u32) {
-    #[cfg(target_os = "zkvm")]
+    #[cfg(target_os = "r0-zkvm")]
     unsafe {
         asm!(
             "ecall",
@@ -259,7 +259,7 @@ fn ecall_4(t0: u32, a0: u32, a1: u32, a2: u32, a3: u32, a4: u32) {
             in("a4") a4,
         )
     };
-    #[cfg(not(target_os = "zkvm"))]
+    #[cfg(not(target_os = "r0-zkvm"))]
     {
         core::hint::black_box((t0, a0, a1, a2, a3, a4));
         unimplemented!()
@@ -391,7 +391,7 @@ pub unsafe extern "C" fn sys_panic(msg_ptr: *const u8, len: usize) -> ! {
     syscall_2(nr::SYS_PANIC, null_mut(), 0, msg_ptr as u32, len as u32);
 
     // As a fallback for non-compliant hosts, issue an illegal instruction.
-    #[cfg(target_os = "zkvm")]
+    #[cfg(target_os = "r0-zkvm")]
     asm!("sw x0, 1(x0)");
     unreachable!()
 }
