@@ -101,10 +101,7 @@ pub use self::host::{
         session::{FileSegmentRef, Segment, SegmentRef, Session, SessionEvents, SimpleSegmentRef},
     },
 };
-#[cfg(
-    any(all(not(target_os = "zkvm"), feature = "client")),
-    feature = "dummy"
-)]
+#[cfg(any(all(not(target_os = "zkvm"), feature = "client"), feature = "dummy"))]
 pub use self::host::{
     api::{client::Client as ApiClient, Asset, AssetRequest, Connector, SegmentInfo, SessionInfo},
     client::{
