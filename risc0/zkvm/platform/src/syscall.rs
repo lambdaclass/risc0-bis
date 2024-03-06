@@ -216,7 +216,7 @@ macro_rules! impl_syscall {
                         )?);
                 Return(a0, a1)
             }
-            #[cfg(not(target_os = "zkvm"))]
+            #[cfg(any(not(target_os = "zkvm"), feature = "dummy"))]
             unimplemented!()
         }
     }
@@ -239,7 +239,7 @@ fn ecall_1(t0: u32, a0: u32, a1: u32) {
             in("a1") a1,
         )
     };
-    #[cfg(not(target_os = "zkvm"))]
+    #[cfg(any(not(target_os = "zkvm"), feature = "dummy"))]
     {
         core::hint::black_box((t0, a0, a1));
         unimplemented!()
@@ -259,7 +259,7 @@ fn ecall_4(t0: u32, a0: u32, a1: u32, a2: u32, a3: u32, a4: u32) {
             in("a4") a4,
         )
     };
-    #[cfg(not(target_os = "zkvm"))]
+    #[cfg(any(not(target_os = "zkvm"), feature = "dummy"))]
     {
         core::hint::black_box((t0, a0, a1, a2, a3, a4));
         unimplemented!()

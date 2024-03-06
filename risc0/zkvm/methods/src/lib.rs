@@ -18,5 +18,5 @@
 pub mod bench;
 pub mod multi_test;
 
-#[cfg(not(target_os = "zkvm"))]
+#[cfg(any(not(target_os = "zkvm"), feature = "dummy"))]
 include!(concat!(env!("OUT_DIR"), "/methods.rs"));

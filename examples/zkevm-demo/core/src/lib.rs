@@ -38,7 +38,7 @@ impl<T> ResTrack<T>
 where
     T: Clone,
 {
-    #[cfg(not(target_os = "zkvm"))]
+    #[cfg(any(not(target_os = "zkvm"), feature = "dummy"))]
     pub fn reset(&mut self) {
         self.idx = 0;
     }
@@ -49,7 +49,7 @@ where
         res
     }
 
-    #[cfg(not(target_os = "zkvm"))]
+    #[cfg(any(not(target_os = "zkvm"), feature = "dummy"))]
     pub fn set(&mut self, elm: &T) {
         self.elms.push(elm.clone());
     }

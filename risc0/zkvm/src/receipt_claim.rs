@@ -218,7 +218,7 @@ impl ExitCode {
         }
     }
 
-    #[cfg(not(target_os = "zkvm"))]
+    #[cfg(any(not(target_os = "zkvm"), feature = "dummy"))]
     pub(crate) fn expects_output(&self) -> bool {
         match self {
             ExitCode::Halted(_) | ExitCode::Paused(_) => true,

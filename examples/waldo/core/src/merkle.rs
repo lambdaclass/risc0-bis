@@ -70,7 +70,7 @@ where
     }
 }
 
-#[cfg(not(target_os = "zkvm"))]
+#[cfg(any(not(target_os = "zkvm"), feature = "dummy"))]
 impl<Element> MerkleTree<Element>
 where
     Element: Hashable<ShaHasher> + Serialize,

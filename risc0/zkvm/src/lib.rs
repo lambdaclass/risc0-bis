@@ -72,7 +72,7 @@
 extern crate alloc;
 
 pub mod guest;
-#[cfg(not(target_os = "zkvm"))]
+#[cfg(any(not(target_os = "zkvm"), feature = "dummy"))]
 mod host;
 mod receipt_claim;
 pub mod serde;
@@ -101,7 +101,10 @@ pub use self::host::{
         session::{FileSegmentRef, Segment, SegmentRef, Session, SessionEvents, SimpleSegmentRef},
     },
 };
-#[cfg(all(not(target_os = "zkvm"), feature = "client"))]
+#[cfg(
+    any(all(not(target_os = "zkvm"), feature = "client")),
+    feature = "dummy"
+)]
 pub use self::host::{
     api::{client::Client as ApiClient, Asset, AssetRequest, Connector, SegmentInfo, SessionInfo},
     client::{
@@ -117,7 +120,7 @@ pub use self::receipt_claim::{
     Assumptions, ExitCode, InvalidExitCodeError, MaybePruned, Output, PrunedValueError,
     ReceiptClaim,
 };
-#[cfg(not(target_os = "zkvm"))]
+#[cfg(any(not(target_os = "zkvm"), feature = "dummy"))]
 pub use {
     self::host::{
         control_id::POSEIDON_CONTROL_ID,

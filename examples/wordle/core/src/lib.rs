@@ -39,7 +39,7 @@ impl WordFeedback {
         self.0.iter().all(|x| *x == LetterFeedback::Correct)
     }
 
-    #[cfg(not(target_os = "zkvm"))]
+    #[cfg(any(not(target_os = "zkvm"), feature = "dummy"))]
     pub fn print(&self, guess_word: &str) {
         print!("Your results: ");
         for i in 0..WORD_LENGTH {

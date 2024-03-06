@@ -196,7 +196,7 @@ pub fn memory_barrier<T>(ptr: *const T) {
     unsafe {
         asm!("/* {0} */", in(reg) (ptr))
     }
-    #[cfg(not(target_os = "zkvm"))]
+    #[cfg(any(not(target_os = "zkvm"), feature = "dummy"))]
     core::sync::atomic::fence(core::sync::atomic::Ordering::SeqCst)
 }
 
