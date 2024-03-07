@@ -82,20 +82,20 @@
 pub mod env;
 pub mod sha;
 
-#[cfg(target_os = "zkvm")]
+#[cfg(all(target_os = "zkvm", not(target_vendor = "succinct")))]
 use core::arch::asm;
 
 use risc0_zkvm_platform::syscall::sys_panic;
 
 pub use crate::entry;
 
-#[cfg(target_os = "zkvm")]
+#[cfg(all(target_os = "zkvm", not(target_vendor = "succinct")))]
 core::arch::global_asm!(include_str!("memset.s"));
-#[cfg(target_os = "zkvm")]
+#[cfg(all(target_os = "zkvm", not(target_vendor = "succinct")))]
 core::arch::global_asm!(include_str!("memcpy.s"));
 
 fn _fault() -> ! {
-    #[cfg(target_os = "zkvm")]
+    #[cfg(all(target_os = "zkvm", not(target_vendor = "succinct")))]
     unsafe {
         asm!("sw x0, 1(x0)")
     };
@@ -147,7 +147,7 @@ macro_rules! entry {
     };
 }
 
-#[cfg(target_os = "zkvm")]
+#[cfg(all(target_os = "zkvm", not(target_vendor = "succinct")))]
 #[no_mangle]
 unsafe extern "C" fn __start() -> ! {
     env::init();
@@ -163,13 +163,13 @@ unsafe extern "C" fn __start() -> ! {
     unreachable!();
 }
 
-#[cfg(target_os = "zkvm")]
+#[cfg(all(target_os = "zkvm", not(target_vendor = "succinct")))]
 static STACK_TOP: u32 = risc0_zkvm_platform::memory::STACK_TOP;
 
 // Entry point; sets up global pointer and stack pointer and passes
 // to zkvm_start.  TODO: when asm_const is stablized, use that here
 // instead of defining a symbol and dereferencing it.
-#[cfg(target_os = "zkvm")]
+#[cfg(all(target_os = "zkvm", not(target_vendor = "succinct")))]
 core::arch::global_asm!(
     r#"
 .section .text._start;
@@ -192,7 +192,7 @@ _start:
 #[allow(unused_variables)]
 pub fn memory_barrier<T>(ptr: *const T) {
     // SAFETY: This passes a pointer in, but does nothing with it.
-    #[cfg(target_os = "zkvm")]
+    #[cfg(all(target_os = "zkvm", not(target_vendor = "succinct")))]
     unsafe {
         asm!("/* {0} */", in(reg) (ptr))
     }
