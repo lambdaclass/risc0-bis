@@ -68,11 +68,11 @@
 //! [zero-knowledge proofs]: https://en.wikipedia.org/wiki/Zero-knowledge_proof
 //! [zkHack]: https://youtu.be/cLqFvhmXiD0
 //! [zkVM Tutorial]: https://dev.risczero.com/api/zkvm/tutorials/hello-world
-
+e
 extern crate alloc;
 
 pub mod guest;
-#[cfg(any(not(target_os = "zkvm")), target_vendor = "succinct)")]
+#[cfg(any(not(target_os = "zkvm"), target_vendor = "succinct"))]
 mod host;
 mod receipt_claim;
 pub mod serde;
@@ -85,7 +85,7 @@ pub mod recursion {
 }
 
 pub use anyhow::Result;
-#[cfg(any(not(target_os = "zkvm")), target_vendor = "succinct)")]
+#[cfg(any(not(target_os = "zkvm"), target_vendor = "succinct"))]
 #[cfg(any(feature = "client", feature = "prove"))]
 pub use bytes::Bytes;
 pub use risc0_binfmt::SystemState;
@@ -123,7 +123,7 @@ pub use self::receipt_claim::{
     Assumptions, ExitCode, InvalidExitCodeError, MaybePruned, Output, PrunedValueError,
     ReceiptClaim,
 };
-#[cfg(any(not(target_os = "zkvm")), target_vendor = "succinct)")]
+#[cfg(any(not(target_os = "zkvm"), target_vendor = "succinct"))]
 pub use {
     self::host::{
         control_id::POSEIDON_CONTROL_ID,
