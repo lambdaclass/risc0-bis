@@ -72,7 +72,7 @@
 extern crate alloc;
 
 pub mod guest;
-#[cfg(not(target_os = "zkvm"))]
+#[cfg(any(not(target_os = "zkvm")), target_vendor = "succinct)")]
 mod host;
 mod receipt_claim;
 pub mod serde;
@@ -85,13 +85,16 @@ pub mod recursion {
 }
 
 pub use anyhow::Result;
-#[cfg(not(target_os = "zkvm"))]
+#[cfg(any(not(target_os = "zkvm")), target_vendor = "succinct)")]
 #[cfg(any(feature = "client", feature = "prove"))]
 pub use bytes::Bytes;
 pub use risc0_binfmt::SystemState;
 pub use risc0_zkvm_platform::{declare_syscall, memory::GUEST_MAX_MEM, PAGE_SIZE};
 
-#[cfg(all(not(target_os = "zkvm"), feature = "prove"))]
+#[cfg(any(
+    all(not(target_os = "zkvm"), feature = "prove"),
+    all(target_vendor = "succinct", feature = "prove")
+))]
 pub use self::host::{
     api::server::Server as ApiServer,
     client::prove::local::LocalProver,
@@ -101,7 +104,10 @@ pub use self::host::{
         session::{FileSegmentRef, Segment, SegmentRef, Session, SessionEvents, SimpleSegmentRef},
     },
 };
-#[cfg(all(not(target_os = "zkvm"), feature = "client"))]
+#[cfg(any(
+    all(not(target_os = "zkvm"), feature = "client"),
+    all(target_vendor = "succinct", feature = "client")
+))]
 pub use self::host::{
     api::{client::Client as ApiClient, Asset, AssetRequest, Connector, SegmentInfo, SessionInfo},
     client::{
@@ -117,7 +123,7 @@ pub use self::receipt_claim::{
     Assumptions, ExitCode, InvalidExitCodeError, MaybePruned, Output, PrunedValueError,
     ReceiptClaim,
 };
-#[cfg(not(target_os = "zkvm"))]
+#[cfg(any(not(target_os = "zkvm")), target_vendor = "succinct)")]
 pub use {
     self::host::{
         control_id::POSEIDON_CONTROL_ID,
