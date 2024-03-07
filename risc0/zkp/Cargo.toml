@@ -30,7 +30,7 @@ tracing = { version = "0.1", default-features = false, features = [
   "attributes",
 ] }
 
-[target.'cfg(not(target_os = "zkvm"), target_vendor = "succinct"))'.dependencies]
+[target.'cfg(not(target_os = "zkvm"))'.dependencies]
 ndarray = { version = "0.15", features = ["rayon"], optional = true }
 rand = { version = "0.8", optional = true }
 rayon = { version = "1.5", optional = true }
