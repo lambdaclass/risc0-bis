@@ -68,7 +68,6 @@
 //! [zero-knowledge proofs]: https://en.wikipedia.org/wiki/Zero-knowledge_proof
 //! [zkHack]: https://youtu.be/cLqFvhmXiD0
 //! [zkVM Tutorial]: https://dev.risczero.com/api/zkvm/tutorials/hello-world
-e
 extern crate alloc;
 
 pub mod guest;
