@@ -53,7 +53,7 @@ serde = { version = "1.0", default-features = false, features = [
 ] }
 
 # Host dependencies
-[target.'cfg(not(target_os = "zkvm"))'.dependencies]
+[target.'cfg(any(not(target_os = "zkvm"), target_vendor = "succinct"))'.dependencies]
 addr2line = { version = "0.21", features = ["rustc-demangle"], optional = true }
 ark-bn254 = { version = "0.4" }
 ark-groth16 = { version = "0.4", default-features = false }
