@@ -877,7 +877,6 @@ version = "0.20.1"
 dependencies = [
  "bytemuck",
  "getrandom",
- "libm",
 ]
 
 [[package]]
