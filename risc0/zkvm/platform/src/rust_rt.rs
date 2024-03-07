@@ -92,5 +92,6 @@ unsafe impl GlobalAlloc for BumpPointerAlloc {
     }
 }
 
+#[cfg(not(target_vendor = "succinct"))]
 #[global_allocator]
 static HEAP: BumpPointerAlloc = BumpPointerAlloc;
