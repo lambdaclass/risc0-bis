@@ -386,7 +386,10 @@ pub unsafe extern "C" fn sys_rand(recv_buf: *mut u32, words: usize) {
 /// # Safety
 ///
 /// `msg_ptr` must be aligned and dereferenceable.
-#[cfg_attr(feature = "export-syscalls", no_mangle)]
+#[cfg_attr(
+    all(feature = "export-syscalls", not(target_vendor = "succinct")),
+    no_mangle
+)]
 pub unsafe extern "C" fn sys_panic(msg_ptr: *const u8, len: usize) -> ! {
     syscall_2(nr::SYS_PANIC, null_mut(), 0, msg_ptr as u32, len as u32);
 
