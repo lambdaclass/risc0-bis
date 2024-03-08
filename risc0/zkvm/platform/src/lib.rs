@@ -19,7 +19,11 @@
 pub mod memory;
 #[macro_use]
 pub mod syscall;
-#[cfg(all(feature = "export-getrandom", target_os = "zkvm"))]
+#[cfg(all(
+    feature = "export-getrandom",
+    target_os = "zkvm",
+    not(target_vendor = "succinct")
+))]
 mod getrandom;
 #[cfg(all(
     feature = "export-libm",
