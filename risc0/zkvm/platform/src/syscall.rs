@@ -549,7 +549,10 @@ fn sys_read_internal(fd: u32, recv_ptr: *mut u32, nwords: usize, nbytes: usize) 
 /// # Safety
 ///
 /// `write_ptr` must be aligned and dereferenceable.
-#[cfg_attr(feature = "export-syscalls", no_mangle)]
+#[cfg_attr(
+    all(feature = "export-syscalls", target_vendor = "succinct"),
+    no_mangle
+)]
 pub unsafe extern "C" fn sys_write(fd: u32, write_ptr: *const u8, nbytes: usize) {
     let mut nbytes_remain = nbytes;
     let mut write_ptr = write_ptr;

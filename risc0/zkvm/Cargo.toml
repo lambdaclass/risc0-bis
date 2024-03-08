@@ -42,7 +42,7 @@ risc0-binfmt = { workspace = true }
 risc0-core = { workspace = true }
 risc0-zkp = { workspace = true }
 risc0-zkvm-platform = { workspace = true, features = [
-  # "rust-runtime",
+  "rust-runtime",
   "export-getrandom",
 ] }
 rrs-lib = "0.1"
