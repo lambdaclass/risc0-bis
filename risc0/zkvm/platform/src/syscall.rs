@@ -550,7 +550,7 @@ fn sys_read_internal(fd: u32, recv_ptr: *mut u32, nwords: usize, nbytes: usize) 
 ///
 /// `write_ptr` must be aligned and dereferenceable.
 #[cfg_attr(
-    all(feature = "export-syscalls", target_vendor = "succinct"),
+    all(feature = "export-syscalls", not(target_vendor = "succinct")),
     no_mangle
 )]
 pub unsafe extern "C" fn sys_write(fd: u32, write_ptr: *const u8, nbytes: usize) {
@@ -588,7 +588,10 @@ pub unsafe extern "C" fn sys_write(fd: u32, write_ptr: *const u8, nbytes: usize)
 /// # Safety
 ///
 /// `out_words` and `varname` must be aligned and dereferenceable.
-#[cfg_attr(feature = "export-syscalls", no_mangle)]
+#[cfg_attr(
+    all(feature = "export-syscalls", not(target_vendor = "succinct")),
+    no_mangle
+)]
 pub unsafe extern "C" fn sys_getenv(
     out_words: *mut u32,
     out_nwords: usize,
@@ -646,13 +649,19 @@ pub unsafe extern "C" fn sys_argv(
     a0 as usize
 }
 
-#[cfg_attr(feature = "export-syscalls", no_mangle)]
+#[cfg_attr(
+    all(feature = "export-syscalls", not(target_vendor = "succinct")),
+    no_mangle
+)]
 pub extern "C" fn sys_alloc_words(nwords: usize) -> *mut u32 {
     unsafe { sys_alloc_aligned(WORD_SIZE * nwords, WORD_SIZE) as *mut u32 }
 }
 
 #[cfg(feature = "export-syscalls")]
-#[no_mangle]
+#[cfg_attr(
+    all(feature = "export-syscalls", not(target_vendor = "succinct")),
+    no_mangle
+)]
 /// # Safety
 ///
 /// This function should be safe to call, but clippy complains if it is not marked as `unsafe`.
