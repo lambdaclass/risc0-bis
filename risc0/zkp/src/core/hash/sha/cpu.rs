@@ -95,7 +95,7 @@ impl Sha256 for Impl {
             set_word(block.as_mut_slice(), i, block_half1.as_words()[i]);
             set_word(block.as_mut_slice(), 8 + i, block_half2.as_words()[i]);
         }
-        sha2::compress256(&mut state, slice::from_ref(&block));
+        // sha2::compress256(&mut state, slice::from_ref(&block));
 
         // Convert the state from big-endian to native byte order.
         for word in state.iter_mut() {
